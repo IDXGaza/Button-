@@ -3,54 +3,42 @@ export const playZaSound = () => {
   try {
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
     const ctx = new AudioContextClass();
-    
     const now = ctx.currentTime;
     
-    // 1. الجزء الأساسي (الطنين الصوتي)
-    const osc = ctx.createOscillator();
-    const oscGain = ctx.createGain();
+    // المذبذب الأول: الطنين الأساسي
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sawtooth';
+    osc1.frequency.setValueAtTime(150, now);
+    osc1.frequency.exponentialRampToValueAtTime(140, now + 0.4);
     
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(140, now); 
-    osc.frequency.exponentialRampToValueAtTime(130, now + 0.3);
-    
-    oscGain.gain.setValueAtTime(0, now);
-    oscGain.gain.linearRampToValueAtTime(0.2, now + 0.02);
-    oscGain.gain.linearRampToValueAtTime(0.15, now + 0.2);
-    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+    gain1.gain.setValueAtTime(0, now);
+    gain1.gain.linearRampToValueAtTime(0.3, now + 0.02);
+    gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
 
-    // 2. الجزء الاحتكاكي (الهسيس العالي الحاد)
-    const noiseOsc = ctx.createOscillator();
-    const noiseGain = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
+    // المذبذب الثاني: حدة حرف الزاي
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'square';
+    osc2.frequency.setValueAtTime(3000, now);
     
-    noiseOsc.type = 'square'; 
-    noiseOsc.frequency.setValueAtTime(4000, now);
-    
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(3800, now);
-    filter.Q.setValueAtTime(5, now);
-    
-    noiseGain.gain.setValueAtTime(0, now);
-    noiseGain.gain.linearRampToValueAtTime(0.1, now + 0.05);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    gain2.gain.setValueAtTime(0, now);
+    gain2.gain.linearRampToValueAtTime(0.05, now + 0.05);
+    gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
 
-    // التوصيل
-    osc.connect(oscGain);
-    oscGain.connect(ctx.destination);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
     
-    noiseOsc.connect(filter);
-    filter.connect(noiseGain);
-    noiseGain.connect(ctx.destination);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
 
-    // تشغيل وإيقاف
-    osc.start(now);
-    noiseOsc.start(now);
+    osc1.start(now);
+    osc2.start(now);
     
-    osc.stop(now + 0.5);
-    noiseOsc.stop(now + 0.5);
+    osc1.stop(now + 0.5);
+    osc2.stop(now + 0.5);
     
   } catch (e) {
-    console.error("Audio error:", e);
+    console.error("Audio failed:", e);
   }
 };
