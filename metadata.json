@@ -1,0 +1,5 @@
+{
+  "name": "The Za sound App",
+  "description": "A beautiful, interactive application that generates the sound of the Arabic letter 'Za' (ز) using Gemini's high-quality text-to-speech technology.",
+  "requestFramePermissions": []
+}
