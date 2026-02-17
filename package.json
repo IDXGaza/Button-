@@ -6,10 +6,7 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "dependencies": {
-    "@google/genai": "^1.41.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
-  "description": "تطبيق الزر التفاعلي الذكي المحسن للنشر الفوري على Vercel"
+  "scripts": {
+    "build": "echo 'No build needed'"
+  }
 }
