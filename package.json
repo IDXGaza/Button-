@@ -3,6 +3,9 @@
   "name": "interactive-smart-button",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "build": "mkdir -p public && cp -r index.html index.tsx components utils services metadata.json public/ 2>/dev/null || true"
+  },
   "engines": {
     "node": ">=20.0.0"
   }

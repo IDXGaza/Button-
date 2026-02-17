@@ -4,55 +4,53 @@ export const playZaSound = () => {
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
     const ctx = new AudioContextClass();
     
-    // 1. المذبذب للجزء الصوتي (Vocal part)
+    const now = ctx.currentTime;
+    
+    // 1. الجزء الأساسي (الطنين الصوتي)
     const osc = ctx.createOscillator();
     const oscGain = ctx.createGain();
     
     osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(120, ctx.currentTime); // تردد منخفض للطنين
+    osc.frequency.setValueAtTime(140, now); 
+    osc.frequency.exponentialRampToValueAtTime(130, now + 0.3);
     
-    oscGain.gain.setValueAtTime(0, ctx.currentTime);
-    oscGain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.05);
-    oscGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+    oscGain.gain.setValueAtTime(0, now);
+    oscGain.gain.linearRampToValueAtTime(0.2, now + 0.02);
+    oscGain.gain.linearRampToValueAtTime(0.15, now + 0.2);
+    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
 
-    // 2. الضوضاء للجزء الاحتكاكي (Friction part - the 'zzz' hiss)
-    const bufferSize = ctx.sampleRate * 0.5;
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1;
-    }
-    
-    const noise = ctx.createBufferSource();
-    noise.buffer = buffer;
-    
-    const noiseFilter = ctx.createBiquadFilter();
-    noiseFilter.type = 'bandpass';
-    noiseFilter.frequency.setValueAtTime(3500, ctx.currentTime);
-    noiseFilter.Q.setValueAtTime(1, ctx.currentTime);
-    
+    // 2. الجزء الاحتكاكي (الهسيس العالي الحاد)
+    const noiseOsc = ctx.createOscillator();
     const noiseGain = ctx.createGain();
-    noiseGain.gain.setValueAtTime(0, ctx.currentTime);
-    noiseGain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.05);
-    noiseGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+    const filter = ctx.createBiquadFilter();
+    
+    noiseOsc.type = 'square'; 
+    noiseOsc.frequency.setValueAtTime(4000, now);
+    
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(3800, now);
+    filter.Q.setValueAtTime(5, now);
+    
+    noiseGain.gain.setValueAtTime(0, now);
+    noiseGain.gain.linearRampToValueAtTime(0.1, now + 0.05);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
 
     // التوصيل
     osc.connect(oscGain);
     oscGain.connect(ctx.destination);
     
-    noise.connect(noiseFilter);
-    noiseFilter.connect(noiseGain);
+    noiseOsc.connect(filter);
+    filter.connect(noiseGain);
     noiseGain.connect(ctx.destination);
 
-    // البدء
-    osc.start();
-    noise.start();
+    // تشغيل وإيقاف
+    osc.start(now);
+    noiseOsc.start(now);
     
-    // التوقف التلقائي
-    osc.stop(ctx.currentTime + 0.6);
-    noise.stop(ctx.currentTime + 0.6);
+    osc.stop(now + 0.5);
+    noiseOsc.stop(now + 0.5);
     
   } catch (e) {
-    console.error("Audio context error:", e);
+    console.error("Audio error:", e);
   }
 };
