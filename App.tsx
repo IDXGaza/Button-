@@ -20,8 +20,8 @@ const themes: Theme[] = [
     buttonFrom: 'from-indigo-500', 
     buttonTo: 'to-indigo-700', 
     buttonBorder: 'border-indigo-900', 
-    bgClass: 'bg-indigo-50',
-    glowColor: 'bg-indigo-400'
+    bgClass: 'bg-indigo-200', // لون أوضح
+    glowColor: 'bg-indigo-500'
   },
   { 
     id: 'rose', 
@@ -29,8 +29,8 @@ const themes: Theme[] = [
     buttonFrom: 'from-rose-500', 
     buttonTo: 'to-rose-700', 
     buttonBorder: 'border-rose-900', 
-    bgClass: 'bg-rose-50',
-    glowColor: 'bg-rose-400'
+    bgClass: 'bg-rose-200', // لون أوضح
+    glowColor: 'bg-rose-500'
   },
   { 
     id: 'emerald', 
@@ -38,8 +38,8 @@ const themes: Theme[] = [
     buttonFrom: 'from-emerald-500', 
     buttonTo: 'to-emerald-700', 
     buttonBorder: 'border-emerald-900', 
-    bgClass: 'bg-emerald-50',
-    glowColor: 'bg-emerald-400'
+    bgClass: 'bg-emerald-200', // لون أوضح
+    glowColor: 'bg-emerald-500'
   },
   { 
     id: 'amber', 
@@ -47,8 +47,8 @@ const themes: Theme[] = [
     buttonFrom: 'from-amber-500', 
     buttonTo: 'to-amber-700', 
     buttonBorder: 'border-amber-900', 
-    bgClass: 'bg-amber-50',
-    glowColor: 'bg-amber-400'
+    bgClass: 'bg-amber-200', // لون أوضح
+    glowColor: 'bg-amber-500'
   }
 ];
 
@@ -56,12 +56,12 @@ const App: React.FC = () => {
   const [currentTheme, setCurrentTheme] = useState<Theme>(themes[0]);
 
   const handleAction = useCallback(() => {
-    // التفاعل الآن فوري تماماً وبصري فقط داخل مكون الزر
-    console.log("Button clicked instantly!");
+    // التفاعل فوري
+    console.log("Button clicked!");
   }, []);
 
   return (
-    <div className={`h-[100dvh] w-full flex flex-col items-center justify-center transition-colors duration-1000 ease-in-out ${currentTheme.bgClass} overflow-hidden relative`}>
+    <div className={`h-[100dvh] w-full flex flex-col items-center justify-center transition-colors duration-700 ease-in-out ${currentTheme.bgClass} overflow-hidden relative`}>
       
       {/* منتقي الألوان في الزاوية العلويّة */}
       <div className="absolute top-6 right-6 z-50">
@@ -72,10 +72,10 @@ const App: React.FC = () => {
         />
       </div>
 
-      {/* زينة الخلفية */}
+      {/* زينة الخلفية - تم زيادة الكثافة والحجم */}
       <div className="fixed inset-0 overflow-hidden -z-10 pointer-events-none">
-        <div className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px] opacity-20 transition-colors duration-1000 ${currentTheme.glowColor} animate-pulse`}></div>
-        <div className={`absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-[150px] opacity-20 transition-colors duration-1000 ${currentTheme.glowColor} animate-pulse delay-700`}></div>
+        <div className={`absolute -top-24 -left-24 w-[500px] h-[500px] rounded-full blur-[120px] opacity-40 transition-colors duration-1000 ${currentTheme.glowColor} animate-pulse`}></div>
+        <div className={`absolute -bottom-24 -right-24 w-[600px] h-[600px] rounded-full blur-[150px] opacity-40 transition-colors duration-1000 ${currentTheme.glowColor} animate-pulse delay-700`}></div>
       </div>
 
       {/* الزر في المنتصف */}
